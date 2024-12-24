@@ -1,4 +1,5 @@
 # clean-architecture-for-katas
+---
 
 Welcome to the Clean Architecture for Katas repository! This project is a quick set up to build software applications using the principles of Clean Architecture, specifically designed for practice with coding katas.
 
