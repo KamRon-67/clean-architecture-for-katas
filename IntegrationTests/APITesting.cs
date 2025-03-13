@@ -22,12 +22,13 @@ namespace IntegrationTests
             _factory = factory;
             _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions
             {
-                AllowAutoRedirect = false
+                AllowAutoRedirect = false,
+                BaseAddress = new Uri("localhost:8080")
             });
         }
 
         // Intergration test
-        [Fact (Skip = "Test is failing 500 error after updates")]
+        [Fact]
         public async Task ReturnsSucess()
         {
             using (var scope = _factory.Services.CreateScope())
@@ -39,11 +40,47 @@ namespace IntegrationTests
                 Seeding.InitializeTestDB(db);
             }
 
-            var response = await _httpClient.GetAsync("/api/posts");
+            var response = await _httpClient.GetAsync("api/posts/");
             var result = await response.Content.ReadFromJsonAsync<List<Post>>();
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
             result.Should().HaveCount(3);
         }
+        
+        [Fact]
+        public async Task CreatePost_ReturnsCreatedResponse()
+        {
+            
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var scopedServices = scope.ServiceProvider;
+                var db = scopedServices.GetRequiredService<SocialDbcontext>();
+
+                db.Database.Migrate();
+                Seeding.InitializeTestDB(db);
+            }
+            // Arrange
+            var newPost = new Post
+            {
+                Comments = "This is a test comment",
+                Content = "This is test content",
+                DateCreated = DateTime.UtcNow,
+                LastModified = DateTime.UtcNow
+            };
+
+            // Act
+            var response = await _httpClient.PostAsJsonAsync("api/posts", newPost);
+
+            // Assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+
+            // Ensure the response contains a valid location header
+            var createdPost = await response.Content.ReadFromJsonAsync<Post>();
+            createdPost.Should().NotBeNull();
+            createdPost.Id.Should().BeGreaterThan(0);
+            createdPost.Comments.Should().Be(newPost.Comments);
+            createdPost.Content.Should().Be(newPost.Content);
+        }
+
 
         // Unit tests
         [Fact]

@@ -1,10 +1,9 @@
 ﻿using Application.Abstractions;
 using Application.Posts.Commands;
-using MediatR;
 
 namespace Application.Posts.CommandHandlers
 {
-    public class DeletePostHandler : IRequestHandler<DeletePost>
+    public class DeletePostHandler : IDeletePostHandler 
     {
         private readonly IPostRepository _postRepository;
 
@@ -13,10 +12,9 @@ namespace Application.Posts.CommandHandlers
             _postRepository = postRepository;
         }
 
-        public async Task<Unit> Handle(DeletePost request, CancellationToken cancellationToken)
+        public void Handle(DeletePost request)
         {
-            await _postRepository.DeletePost(request.PostId);
-            return Unit.Value;
+             _postRepository.DeletePost(request.PostId);
         }
     }
 }

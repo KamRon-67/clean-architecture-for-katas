@@ -1,11 +1,10 @@
 ﻿using Application.Abstractions;
 using Application.Posts.Commands;
 using Domain.Entities;
-using MediatR;
 
 namespace Application.Posts.CommandHandlers
 {
-    public  class CreatePostHandler : IRequestHandler<CreatePost, Post>
+    public class CreatePostHandler : ICreatePostHandler 
     {
         private readonly IPostRepository _postRepository;
 
@@ -14,15 +13,27 @@ namespace Application.Posts.CommandHandlers
             _postRepository = postRepository;
         }
 
-        public async Task<Post> Handle(CreatePost request, CancellationToken cancellationToken)
+        public async Task<Post> Handle(CreatePost request)
         {
             var newPost = new Post
             {
-                Comments = "Remove this hard coded value", 
-                Content = request.PostContent
+                Comments = request.PostContent, // Use the request data instead of hardcoded values
+                Content = request.PostContent, 
+                DateCreated = DateTime.UtcNow,
+                LastModified = DateTime.UtcNow
             };
 
-            return await _postRepository.CreatePost(newPost);
+            try
+            {
+                await _postRepository.CreatePost(newPost);  // ✅ Await the async repository method
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error creating post: {ex.Message}");
+                throw;  // Re-throw exception to ensure proper error handling
+            }
+            
+            return newPost;
         }
     }
 }

@@ -1,8 +1,6 @@
-﻿using MediatR;
-
-namespace Application.Posts.Commands
+﻿namespace Application.Posts.Commands
 {
-    public class DeletePost : IRequest
+    public class DeletePost 
     {
         public int PostId { get; set; }
     }

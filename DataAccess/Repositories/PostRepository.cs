@@ -1,11 +1,7 @@
 ﻿using Application.Abstractions;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Infrastructure.Repositories
 {
@@ -18,29 +14,31 @@ namespace Infrastructure.Repositories
             _socialDbcontext = socialDbcontext; 
         }
 
-         public async Task<Post> CreatePost(Post toCreate)
+        public async Task<Post> CreatePost(Post toCreate)
         { 
-            toCreate.DateCreated = DateTime.Now;
-            toCreate.LastModified = DateTime.Now;
-            _socialDbcontext.Add(toCreate);
-            await _socialDbcontext.SaveChangesAsync();
-            return toCreate; 
+            toCreate.DateCreated = DateTime.UtcNow;
+            toCreate.LastModified = DateTime.UtcNow;
+
+            await _socialDbcontext.AddAsync(toCreate);  // ✅ Use async version
+            await _socialDbcontext.SaveChangesAsync();  // ✅ Await SaveChangesAsync
+
+            return toCreate;
         }
 
-        public async Task DeletePost(int postId)
+        public void DeletePost(int postId)
         {
-            var post = await _socialDbcontext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
+            var post = _socialDbcontext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
 
             if (post == null) return;
 
             _socialDbcontext.Remove(post);
 
-            await _socialDbcontext.SaveChangesAsync();  
+             _socialDbcontext.SaveChangesAsync();  
         }
 
-        public async Task<Post> GetPostById(int postId)
+        public  Post GetPostById(int postId)
         {
-            return await _socialDbcontext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
+            return  _socialDbcontext.Posts.FirstOrDefault(x => x.Id == postId);
         }
 
         public async Task<ICollection<Post>> GetPosts()
@@ -48,12 +46,12 @@ namespace Infrastructure.Repositories
            return await _socialDbcontext.Posts.ToListAsync();
         }
 
-        public async Task<Post> UpdatePost(string updatedContent, int postId)
+        public  Post UpdatePost(string updatedContent, int postId)
         {
-            var post = await _socialDbcontext.Posts.FirstOrDefaultAsync(x => x.Id == postId); 
+            var post =  _socialDbcontext.Posts.FirstOrDefault(x => x.Id == postId); 
             post.LastModified = DateTime.Now;
             post.Content = updatedContent;
-            await _socialDbcontext.SaveChangesAsync();
+             _socialDbcontext.SaveChangesAsync();
             return post;
         }
     }
