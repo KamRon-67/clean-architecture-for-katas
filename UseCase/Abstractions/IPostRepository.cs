@@ -7,7 +7,7 @@ namespace Application.Abstractions
         Task<ICollection<Post>> GetPosts();
         Post GetPostById(int postId);
         Task<Post> CreatePost(Post toCreate);
-        Post UpdatePost(string updatedContent, int postId);
+        Task<Post> UpdatePost(string updatedContent, int postId);
         void DeletePost(int postId);  
     }
 }

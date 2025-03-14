@@ -5,5 +5,5 @@ namespace Application.Posts.CommandHandlers;
 
 public interface IUpdatePostHandler
 {
-    Post Handle(UpdatePost command);
+    Task<Post> Handle(UpdatePost command);
 }

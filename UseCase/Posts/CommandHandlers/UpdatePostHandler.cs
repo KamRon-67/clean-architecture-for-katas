@@ -13,9 +13,9 @@ namespace Application.Posts.CommandHandlers
             _postRepository = postRepository;
         }
 
-        public Post Handle(UpdatePost request)
+        public async Task<Post> Handle(UpdatePost request)
         {
-            var post = _postRepository.UpdatePost(request.UpdatedContent, request.PostId);
+            var post = await _postRepository.UpdatePost(request.UpdatedContent, request.PostId);
             return post;
         }
     }

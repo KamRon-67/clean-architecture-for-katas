@@ -73,10 +73,10 @@ app.MapPost("/api/posts", async (Post post, ICreatePostHandler createPostHandler
 //     }
 // });
 
-app.MapPut("/api/posts/{id}",  (Post post, int id, IUpdatePostHandler updatePostHandler) =>
+app.MapPut("/api/posts/{id}", async (Post post, int id, IUpdatePostHandler updatePostHandler) =>
 {
     var updatePost = new UpdatePost { PostId = id, UpdatedContent = post.Content };
-    var updatedPost =  updatePostHandler.Handle(updatePost);
+    var updatedPost =  await updatePostHandler.Handle(updatePost);
     return Results.Ok(updatedPost);
 });
 

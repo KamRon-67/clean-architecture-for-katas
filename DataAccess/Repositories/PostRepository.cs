@@ -36,7 +36,7 @@ namespace Infrastructure.Repositories
              _socialDbcontext.SaveChangesAsync();  
         }
 
-        public  Post GetPostById(int postId)
+        public Post GetPostById(int postId)
         {
             return  _socialDbcontext.Posts.FirstOrDefault(x => x.Id == postId);
         }
@@ -46,12 +46,12 @@ namespace Infrastructure.Repositories
            return await _socialDbcontext.Posts.ToListAsync();
         }
 
-        public  Post UpdatePost(string updatedContent, int postId)
+        public async Task<Post> UpdatePost(string updatedContent, int postId)
         {
             var post =  _socialDbcontext.Posts.FirstOrDefault(x => x.Id == postId); 
             post.LastModified = DateTime.Now;
             post.Content = updatedContent;
-             _socialDbcontext.SaveChangesAsync();
+            await _socialDbcontext.SaveChangesAsync();
             return post;
         }
     }
