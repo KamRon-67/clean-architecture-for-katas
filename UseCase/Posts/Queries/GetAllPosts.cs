@@ -2,7 +2,8 @@
 
 namespace Application.Posts.Queries
 {
-    public class GetAllPosts 
+    public class GetAllPosts
     {
+        public GetAllPosts(){}
     }
 }

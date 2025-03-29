@@ -17,7 +17,7 @@ namespace Application.Posts.CommandHandlers
         {
             var newPost = new Post
             {
-                Comments = request.PostContent, // Use the request data instead of hardcoded values
+                Comments = request.PostComments, // Use the request data instead of hardcoded values
                 Content = request.PostContent, 
                 DateCreated = DateTime.UtcNow,
                 LastModified = DateTime.UtcNow

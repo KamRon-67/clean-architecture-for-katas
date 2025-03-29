@@ -36,7 +36,7 @@ namespace Infrastructure.Repositories
              _socialDbcontext.SaveChangesAsync();  
         }
 
-        public Post GetPostById(int postId)
+        public async Task<Post> GetPostById(int postId)
         {
             return  _socialDbcontext.Posts.FirstOrDefault(x => x.Id == postId);
         }

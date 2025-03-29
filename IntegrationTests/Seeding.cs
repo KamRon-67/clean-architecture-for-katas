@@ -18,9 +18,9 @@ namespace IntegrationTests
         {
             return new List<Post>()
             {
-              new Post { Id = 1, Comments = "value1", Content = "value2", DateCreated = DateTime.Now },
-              new Post { Id = 2, Comments = "value3", Content = "value4", DateCreated = DateTime.Now },
-              new Post { Id = 3, Comments = "value5", Content = "value6", DateCreated = DateTime.Now },
+              new Post { Id = 4, Comments = "value1", Content = "value2", DateCreated = DateTime.Now },
+              new Post { Id = 5, Comments = "value3", Content = "value4", DateCreated = DateTime.Now },
+              new Post { Id = 6, Comments = "value5", Content = "value6", DateCreated = DateTime.Now },
             };
         }
     }
