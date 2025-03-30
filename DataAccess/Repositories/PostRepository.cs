@@ -8,14 +8,14 @@ namespace Infrastructure.Repositories
     public class PostRepository : IPostRepository
     {
         private readonly SocialDbcontext _socialDbcontext;
-        
+
         public PostRepository(SocialDbcontext socialDbcontext)
         {
-            _socialDbcontext = socialDbcontext; 
+            _socialDbcontext = socialDbcontext;
         }
 
         public async Task<Post> CreatePost(Post toCreate)
-        { 
+        {
             toCreate.DateCreated = DateTime.UtcNow;
             toCreate.LastModified = DateTime.UtcNow;
 
@@ -33,22 +33,22 @@ namespace Infrastructure.Repositories
 
             _socialDbcontext.Remove(post);
 
-             _socialDbcontext.SaveChangesAsync();  
+            _socialDbcontext.SaveChangesAsync();
         }
 
         public async Task<Post> GetPostById(int postId)
         {
-            return  _socialDbcontext.Posts.FirstOrDefault(x => x.Id == postId);
+            return _socialDbcontext.Posts.FirstOrDefault(x => x.Id == postId);
         }
 
         public async Task<ICollection<Post>> GetPosts()
         {
-           return await _socialDbcontext.Posts.ToListAsync();
+            return await _socialDbcontext.Posts.ToListAsync();
         }
 
         public async Task<Post> UpdatePost(string updatedContent, int postId)
         {
-            var post =  _socialDbcontext.Posts.FirstOrDefault(x => x.Id == postId); 
+            var post = _socialDbcontext.Posts.FirstOrDefault(x => x.Id == postId);
             post.LastModified = DateTime.Now;
             post.Content = updatedContent;
             await _socialDbcontext.SaveChangesAsync();

@@ -5,7 +5,7 @@ using Domain.Entities;
 namespace Application.Posts.QueryHandlers
 {
     public class GetAllPostsHandler : IGetAllPostsHandler
-    { 
+    {
         private readonly IPostRepository _postRepository;
 
         public GetAllPostsHandler(IPostRepository postRepository)

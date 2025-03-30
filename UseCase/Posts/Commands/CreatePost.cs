@@ -2,7 +2,7 @@
 
 namespace Application.Posts.Commands
 {
-    public class CreatePost 
+    public class CreatePost
     {
         public int Id { get; set; }
         public string? PostContent { get; set; }

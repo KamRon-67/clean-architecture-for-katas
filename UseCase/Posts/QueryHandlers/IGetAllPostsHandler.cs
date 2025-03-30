@@ -5,5 +5,5 @@ namespace Application.Posts.QueryHandlers;
 
 public interface IGetAllPostsHandler
 {
-    Task<ICollection<Post>> Handle(GetAllPosts request); 
+    Task<ICollection<Post>> Handle(GetAllPosts request);
 }

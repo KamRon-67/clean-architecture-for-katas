@@ -28,7 +28,8 @@ builder.Services.AddTransient<IGetAllPostsHandler, GetAllPostsHandler>();
 var app = builder.Build();
 
 // --- START DIAGNOSTIC LOGGING ---
-app.Use(async (context, next) => {
+app.Use(async (context, next) =>
+{
     Console.WriteLine($"---> Request Received: {context.Request.Method} {context.Request.Path}");
     await next(context); // Call the next middleware in the pipeline
     Console.WriteLine($"<--- Response Sent: {context.Response.StatusCode} for {context.Request.Path}");
@@ -67,16 +68,16 @@ app.MapGet("/api/post/{id}", async (int id, [FromServices] IGetPostByIdHandler g
     {
         new { Id = 998, Message = "Test Item 1" },
         new { Id = 999, Message = "Test Item 2" }
-    }; 
+    };
     var post = await getPostHandler.Handle(id);
     return Results.Ok(simpleData);
 }).WithName("GetPostById");
 
 app.MapPost("/api/posts", async (Post post, ICreatePostHandler createPostHandler) =>
 {
-    var createPost = new CreatePost { PostContent = post.Content, PostComments = post.Comments};
+    var createPost = new CreatePost { PostContent = post.Content, PostComments = post.Comments };
     var createdPost = await createPostHandler.Handle(createPost);  // ✅ Await the async method
-    return  Results.Created($"/api/posts/{createdPost.Id}", createdPost);//Results.Ok();
+    return Results.Created($"/api/posts/{createdPost.Id}", createdPost);//Results.Ok();
 });
 
 
@@ -99,13 +100,13 @@ app.MapGet("/api/posts", async ([FromServices] IGetAllPostsHandler getAllPostsHa
 app.MapPut("/api/posts/{id}", async (Post post, int id, IUpdatePostHandler updatePostHandler) =>
 {
     var updatePost = new UpdatePost { PostId = id, UpdatedContent = post.Content };
-    var updatedPost =  await updatePostHandler.Handle(updatePost);
+    var updatedPost = await updatePostHandler.Handle(updatePost);
     return Results.Ok(updatedPost);
 });
 
-app.MapDelete("/api/posts/{id}",  (int id, IDeletePostHandler deletePostHandler) =>
+app.MapDelete("/api/posts/{id}", (int id, IDeletePostHandler deletePostHandler) =>
 {
-     deletePostHandler.Handle(new DeletePost { PostId = id });
+    deletePostHandler.Handle(new DeletePost { PostId = id });
     return Results.NoContent();
 });
 

@@ -20,7 +20,7 @@ public class IntegrationTests : IClassFixture<CustomWebApplicationFactory<Progra
         var client = _factory.CreateClient();
 
         var result = await client.GetAsync("/api/posts");
-        
+
         Assert.NotNull(result);
     }
 }

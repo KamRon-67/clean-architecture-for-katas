@@ -4,6 +4,6 @@ namespace Application.Posts.Queries
 {
     public class GetAllPosts
     {
-        public GetAllPosts(){}
+        public GetAllPosts() { }
     }
 }

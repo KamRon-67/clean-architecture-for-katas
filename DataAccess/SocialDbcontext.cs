@@ -5,8 +5,8 @@ namespace Infrastructure
 {
     public class SocialDbcontext : DbContext
     {
-       public SocialDbcontext(DbContextOptions options) : base(options) { }
+        public SocialDbcontext(DbContextOptions options) : base(options) { }
 
-       public DbSet<Post> Posts { get; set; }
+        public DbSet<Post> Posts { get; set; }
     }
 }

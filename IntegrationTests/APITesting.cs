@@ -33,7 +33,7 @@ namespace IntegrationTests
             // Create a scope for THIS TEST to get the DbContext
             // It's generally better practice to create a scope per operation/test
             // rather than reusing a single scope across tests.
-             _scope = _factory.Services.CreateScope(); // Create scope for the test
+            _scope = _factory.Services.CreateScope(); // Create scope for the test
             var dbContext = _scope.ServiceProvider.GetRequiredService<SocialDbcontext>();
 
             // Reset the database for the upcoming test
@@ -101,7 +101,7 @@ namespace IntegrationTests
             // Act
             var response = await _httpClient.PostAsJsonAsync("api/posts", newPost);
 
-             if (!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"API returned error ({response.StatusCode}): {errorContent}");
@@ -117,7 +117,7 @@ namespace IntegrationTests
             createdPost.Content.Should().Be(newPost.Content);
 
             // Optional: Verify it was actually saved in the DB
-             using (var verifyScope = _factory.Services.CreateScope())
+            using (var verifyScope = _factory.Services.CreateScope())
             {
                 var db = verifyScope.ServiceProvider.GetRequiredService<SocialDbcontext>();
                 var postInDb = await db.Posts.FindAsync(createdPost.Id);
@@ -155,8 +155,8 @@ namespace IntegrationTests
         [Fact]
         public async Task PingEndpoint_ReturnsPong()
         {
-           // ... (your existing test code) ...
-           // Arrange
+            // ... (your existing test code) ...
+            // Arrange
             Console.WriteLine("Testing /ping endpoint...");
 
             // Act
@@ -176,9 +176,10 @@ namespace IntegrationTests
             catch (Exception ex)
             {
                 Console.WriteLine($"EXCEPTION in PingEndpoint_ReturnsPong: {ex}");
-                if (response != null) {
+                if (response != null)
+                {
                     Console.WriteLine($"Response Status on Exception: {response.StatusCode}");
-                    try { var errorContent = await response.Content.ReadAsStringAsync(); Console.WriteLine($"Response Content on Exception: {errorContent}"); } catch {}
+                    try { var errorContent = await response.Content.ReadAsStringAsync(); Console.WriteLine($"Response Content on Exception: {errorContent}"); } catch { }
                 }
                 Assert.Fail($"Request failed: {ex.Message}");
             }
@@ -190,7 +191,7 @@ namespace IntegrationTests
         public async Task MinimalJsonEndpoint_ReturnsSuccess()
         {
             // ... (your existing test code) ...
-             // Arrange
+            // Arrange
             Console.WriteLine("Testing /minimal-json endpoint...");
 
             // Act
@@ -215,9 +216,10 @@ namespace IntegrationTests
             catch (Exception ex)
             {
                 Console.WriteLine($"EXCEPTION in MinimalJsonEndpoint_ReturnsSuccess: {ex}");
-                if (response != null) {
+                if (response != null)
+                {
                     Console.WriteLine($"Response Status on Exception: {response.StatusCode}");
-                    try { var errorContent = await response.Content.ReadAsStringAsync(); Console.WriteLine($"Response Content on Exception: {errorContent}"); } catch {}
+                    try { var errorContent = await response.Content.ReadAsStringAsync(); Console.WriteLine($"Response Content on Exception: {errorContent}"); } catch { }
                 }
                 Assert.Fail($"Request failed: {ex.Message}");
             }

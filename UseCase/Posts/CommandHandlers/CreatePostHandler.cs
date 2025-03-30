@@ -4,7 +4,7 @@ using Domain.Entities;
 
 namespace Application.Posts.CommandHandlers
 {
-    public class CreatePostHandler : ICreatePostHandler 
+    public class CreatePostHandler : ICreatePostHandler
     {
         private readonly IPostRepository _postRepository;
 
@@ -18,7 +18,7 @@ namespace Application.Posts.CommandHandlers
             var newPost = new Post
             {
                 Comments = request.PostComments, // Use the request data instead of hardcoded values
-                Content = request.PostContent, 
+                Content = request.PostContent,
                 DateCreated = DateTime.UtcNow,
                 LastModified = DateTime.UtcNow
             };
@@ -27,12 +27,12 @@ namespace Application.Posts.CommandHandlers
             {
                 await _postRepository.CreatePost(newPost);  // ✅ Await the async repository method
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"Error creating post: {ex.Message}");
                 throw;  // Re-throw exception to ensure proper error handling
             }
-            
+
             return newPost;
         }
     }

@@ -4,7 +4,7 @@ using Domain.Entities;
 
 namespace Application.Posts.QueryHandlers
 {
-    public class GetPostByIdHandler : IGetPostByIdHandler 
+    public class GetPostByIdHandler : IGetPostByIdHandler
     {
         private readonly IPostRepository _postRepository;
 
@@ -12,7 +12,7 @@ namespace Application.Posts.QueryHandlers
         {
             _postRepository = postRepository;
         }
-        
+
         public async Task<Post> Handle(GetPostById request, CancellationToken cancellationToken)
         {
             return await _postRepository.GetPostById(request.PostId);
