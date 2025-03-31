@@ -36,9 +36,17 @@ namespace Infrastructure.Repositories
             _socialDbcontext.SaveChangesAsync();
         }
 
-        public async Task<Post> GetPostById(int postId)
+        public async Task<Post?> GetPostById(int postId)
         {
-            return _socialDbcontext.Posts.FirstOrDefault(x => x.Id == postId);
+            var post = await _socialDbcontext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
+
+            if (post == null)
+            {
+                // Log a message or throw an exception if necessary
+                Console.WriteLine($"Post with ID {postId} not found.");
+            }
+
+            return post;
         }
 
         public async Task<ICollection<Post>> GetPosts()

@@ -13,7 +13,7 @@ namespace Application.Posts.QueryHandlers
             _postRepository = postRepository;
         }
 
-        public async Task<Post> Handle(GetPostById request, CancellationToken cancellationToken)
+        public async Task<Post?> Handle(GetPostById request, CancellationToken cancellationToken)
         {
             return await _postRepository.GetPostById(request.PostId);
         }
