@@ -54,13 +54,22 @@ namespace Infrastructure.Repositories
             return await _socialDbcontext.Posts.ToListAsync();
         }
 
-        public async Task<Post> UpdatePost(string updatedContent, int postId)
+        public async Task<Post?> UpdatePost(string updatedContent, int postId)
         {
-            var post = _socialDbcontext.Posts.FirstOrDefault(x => x.Id == postId);
+            var post = await _socialDbcontext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
+
+            if (post == null)
+            {
+                throw new KeyNotFoundException($"Post with ID {postId} not found.");
+            }
+
+
             post.LastModified = DateTime.Now;
             post.Content = updatedContent;
+
             await _socialDbcontext.SaveChangesAsync();
             return post;
         }
+
     }
 }
