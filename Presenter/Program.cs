@@ -69,7 +69,7 @@ app.MapGet("/api/post/{id}", async (int id, [FromServices] IGetPostByIdHandler g
         new { Id = 998, Message = "Test Item 1" },
         new { Id = 999, Message = "Test Item 2" }
     };
-    var post = await getPostHandler.Handle(id);
+    await getPostHandler.Handle(id);
     return Results.Ok(simpleData);
 }).WithName("GetPostById");
 
