@@ -77,7 +77,7 @@ app.MapPost("/api/posts", async (Post post, ICreatePostHandler createPostHandler
 {
     var createPost = new CreatePost { PostContent = post.Content, PostComments = post.Comments };
     var createdPost = await createPostHandler.Handle(createPost);  // ✅ Await the async method
-    return Results.Created($"/api/posts/{createdPost.Id}", createdPost);//Results.Ok();
+    return Results.Created($"/api/posts/{createdPost.Id}", createdPost);
 });
 
 
