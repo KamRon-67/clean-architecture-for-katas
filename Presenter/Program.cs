@@ -114,7 +114,7 @@ app.MapDelete("/api/posts/{id}", (int id, IDeletePostHandler deletePostHandler) 
 
 // --- START DIAGNOSTIC: Log Endpoints ---
 // Do this only once before app.Run()
-if (app is IEndpointRouteBuilder routeBuilder)
+if (app! is IEndpointRouteBuilder routeBuilder)
 {
     Console.WriteLine("\n--- Registered Endpoints ---");
     var dataSources = routeBuilder.DataSources;
