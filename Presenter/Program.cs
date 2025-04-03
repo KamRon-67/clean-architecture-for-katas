@@ -126,7 +126,6 @@ if (app is IEndpointRouteBuilder routeBuilder)
             {
                 Console.WriteLine($"- {routeEndpoint.RoutePattern.RawText} ({string.Join(", ", routeEndpoint.Metadata.OfType<HttpMethodMetadata>().SelectMany(m => m.HttpMethods))})");
                 // Optionally log more metadata if needed
-                // foreach(var meta in routeEndpoint.Metadata) { Console.WriteLine($"    - {meta.GetType().Name}"); }
             }
             else
             {
@@ -139,7 +138,7 @@ if (app is IEndpointRouteBuilder routeBuilder)
 // --- END DIAGNOSTIC: Log Endpoints ---
 
 
-app.Run();
+await app.RunAsync();
 
 // We are using this for the Intergration Tests
 public partial class Program { }
