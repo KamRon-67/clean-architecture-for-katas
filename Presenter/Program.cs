@@ -8,7 +8,6 @@ using Application.Posts.Queries;
 using Application.Posts.QueryHandlers;
 using Domain.Entities;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using IGetPostByIdHandler = Application.Posts.CommandHandlers.IGetPostByIdHandler;
 
@@ -51,16 +50,9 @@ app.UseExceptionHandler(errorApp =>
 });
 
 
-
 app.UseHttpsRedirection();
 
 app.UseRouting();
-
-// Endpoint 1: Plain Text
-app.MapGet("/ping", () => "pong");
-
-// Endpoint 2: Minimal JSON
-app.MapGet("/minimal-json", () => Results.Ok(new { Message = "Minimal API works" }));
 
 app.MapGet("/api/post/{id}", async (int id, [FromServices] IGetPostByIdHandler getPostHandler) =>
 {
@@ -79,7 +71,6 @@ app.MapPost("/api/posts", async (Post post, ICreatePostHandler createPostHandler
     var createdPost = await createPostHandler.Handle(createPost);  // ✅ Await the async method
     return Results.Created($"/api/posts/{createdPost.Id}", createdPost);
 });
-
 
 app.MapGet("/api/posts", async ([FromServices] IGetAllPostsHandler getAllPostsHandler) =>
 {
@@ -109,8 +100,6 @@ app.MapDelete("/api/posts/{id}", (int id, IDeletePostHandler deletePostHandler) 
     deletePostHandler.Handle(new DeletePost { PostId = id });
     return Results.NoContent();
 });
-
-// ... your other app.MapGet/MapPost calls ...
 
 // --- START DIAGNOSTIC: Log Endpoints ---
 // Do this only once before app.Run()
