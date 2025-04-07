@@ -3,12 +3,12 @@ using Application.Posts.CommandHandlers;
 using Infrastructure;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Application.Posts.Commands;
-using Application.Posts.Queries;
-using Application.Posts.QueryHandlers;
 using Domain.Entities;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Use_Cases.Posts.Commands;
+using Use_Cases.Posts.Queries;
+using Use_Cases.Posts.QueryHandlers;
 using IGetPostByIdHandler = Application.Posts.CommandHandlers.IGetPostByIdHandler;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,20 +49,14 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 
-
 app.UseHttpsRedirection();
 
 app.UseRouting();
 
 app.MapGet("/api/post/{id}", async (int id, [FromServices] IGetPostByIdHandler getPostHandler) =>
 {
-    var simpleData = new List<object>
-    {
-        new { Id = 998, Message = "Test Item 1" },
-        new { Id = 999, Message = "Test Item 2" }
-    };
     await getPostHandler.Handle(id);
-    return Results.Ok(simpleData);
+    return Results.Ok(id);
 }).WithName("GetPostById");
 
 app.MapPost("/api/posts", async (Post post, ICreatePostHandler createPostHandler) =>
@@ -103,7 +97,7 @@ app.MapDelete("/api/posts/{id}", (int id, IDeletePostHandler deletePostHandler) 
 
 // --- START DIAGNOSTIC: Log Endpoints ---
 // Do this only once before app.Run()
-if (app! is IEndpointRouteBuilder routeBuilder)
+if (app is IEndpointRouteBuilder routeBuilder)
 {
     Console.WriteLine("\n--- Registered Endpoints ---");
     var dataSources = routeBuilder.DataSources;
