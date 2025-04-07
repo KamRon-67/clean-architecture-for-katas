@@ -1,8 +1,8 @@
 ﻿using Application.Abstractions;
-using Application.Posts.Queries;
 using Domain.Entities;
+using Use_Cases.Posts.Queries;
 
-namespace Application.Posts.QueryHandlers
+namespace Use_Cases.Posts.QueryHandlers
 {
     public class GetAllPostsHandler : IGetAllPostsHandler
     {

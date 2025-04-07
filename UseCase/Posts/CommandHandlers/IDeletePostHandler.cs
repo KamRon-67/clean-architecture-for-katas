@@ -1,4 +1,4 @@
-using Application.Posts.Commands;
+using Use_Cases.Posts.Commands;
 
 namespace Application.Posts.CommandHandlers;
 

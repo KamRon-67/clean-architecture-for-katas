@@ -1,8 +1,7 @@
-﻿namespace Application.Posts.Commands
+﻿namespace Use_Cases.Posts.Commands;
+
+public class UpdatePost
 {
-    public class UpdatePost
-    {
-        public int PostId { get; set; }
-        public string? UpdatedContent { get; set; }
-    }
+    public int PostId { get; set; }
+    public string? UpdatedContent { get; set; }
 }

@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-
-namespace Application.Posts.Commands
+﻿namespace Use_Cases.Posts.Commands
 {
     public class CreatePost
     {

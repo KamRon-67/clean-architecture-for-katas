@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-
-namespace Application.Posts.Queries
+﻿namespace Use_Cases.Posts.Queries
 {
     public class GetAllPosts
     {

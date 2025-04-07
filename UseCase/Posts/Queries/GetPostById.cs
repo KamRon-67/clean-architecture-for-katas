@@ -1,4 +1,4 @@
-﻿namespace Application.Posts.Queries
+﻿namespace Use_Cases.Posts.Queries
 {
     public class GetPostById
     {

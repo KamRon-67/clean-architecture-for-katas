@@ -1,4 +1,4 @@
-﻿namespace Application.Posts.Commands
+﻿namespace Use_Cases.Posts.Commands
 {
     public class DeletePost
     {

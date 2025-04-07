@@ -1,6 +1,4 @@
 ﻿using Application.Abstractions;
-using Application.Posts.Queries;
-using Application.Posts.QueryHandlers;
 using Domain.Entities;
 using FluentAssertions;
 using Infrastructure;
@@ -9,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System.Net.Http.Json;
+using Use_Cases.Posts.Queries;
+using Use_Cases.Posts.QueryHandlers;
 using Xunit; // Make sure Xunit namespace is imported
 
 namespace IntegrationTests

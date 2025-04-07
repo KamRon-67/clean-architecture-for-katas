@@ -1,6 +1,6 @@
 ﻿using Application.Abstractions;
-using Application.Posts.Commands;
 using Domain.Entities;
+using Use_Cases.Posts.Commands;
 
 namespace Application.Posts.CommandHandlers
 {
