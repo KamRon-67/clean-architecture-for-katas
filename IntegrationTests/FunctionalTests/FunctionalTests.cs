@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace IntegrationTests;
 
-public class IntegrationTests : IClassFixture<CustomWebApplicationFactory<Program>>
+public class FunctionalTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
     private CustomWebApplicationFactory<Program> _factory;
     private IHttpClientFactory _httpClientFactory;
 
-    public IntegrationTests(CustomWebApplicationFactory<Program> factory)
+    public FunctionalTests(CustomWebApplicationFactory<Program> factory)
     {
         _factory = factory;
     }

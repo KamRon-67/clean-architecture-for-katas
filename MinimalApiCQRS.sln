@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presenter", "Presenter\Pres
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "IntegrationTests\Tests.csproj", "{25CE7609-F5D5-4746-B4A6-814D9B730C0C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{33FC4A57-10CC-48F1-BABE-6A45ACF6763E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,5 +47,11 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9323D61C-FE60-4438-B4AB-7273B1031099}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7BF2F78B-5BF6-423C-8247-2A052F3EAE77} = {33FC4A57-10CC-48F1-BABE-6A45ACF6763E}
+		{6077FFD7-9584-4812-AEE5-4F79AFBF0B9D} = {33FC4A57-10CC-48F1-BABE-6A45ACF6763E}
+		{F043BF63-AEF5-4722-A6D3-0F7E618B2E5D} = {33FC4A57-10CC-48F1-BABE-6A45ACF6763E}
+		{D49B030A-8560-43E3-BEBE-FA979AC48046} = {33FC4A57-10CC-48F1-BABE-6A45ACF6763E}
 	EndGlobalSection
 EndGlobal
