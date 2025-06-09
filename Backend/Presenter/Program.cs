@@ -10,6 +10,8 @@ using Use_Cases.Posts.Commands;
 using Use_Cases.Posts.Queries;
 using Use_Cases.Posts.QueryHandlers;
 using IGetPostByIdHandler = Application.Posts.CommandHandlers.IGetPostByIdHandler;
+using Scalar.AspNetCore;
+using Microsoft.AspNetCore.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,9 +24,19 @@ builder.Services.AddTransient<ICreatePostHandler, CreatePostHandler>();
 builder.Services.AddTransient<IDeletePostHandler, DeletePostHandler>();
 builder.Services.AddTransient<IUpdatePostHandler, UpdatePostHandler>();
 builder.Services.AddTransient<IGetAllPostsHandler, GetAllPostsHandler>();
+builder.Services.AddOpenApi();
 
 
 var app = builder.Build();
+
+app.MapOpenApi();
+app.MapScalarApiReference();
+
+// if (app.Environment.IsDevelopment())
+// {
+//     app.MapOpenApi();
+//     app.MapScalarApiReference();
+// }
 
 // --- START DIAGNOSTIC LOGGING ---
 app.Use(async (context, next) =>
