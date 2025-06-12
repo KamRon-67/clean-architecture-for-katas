@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Use_Cases.Posts.Commands;
 using Use_Cases.Posts.Queries;
 using Use_Cases.Posts.QueryHandlers;
-using IGetPostByIdHandler = Application.Posts.CommandHandlers.IGetPostByIdHandler;
 using Scalar.AspNetCore;
 using Microsoft.AspNetCore.OpenApi;
 
@@ -24,6 +23,7 @@ builder.Services.AddTransient<ICreatePostHandler, CreatePostHandler>();
 builder.Services.AddTransient<IDeletePostHandler, DeletePostHandler>();
 builder.Services.AddTransient<IUpdatePostHandler, UpdatePostHandler>();
 builder.Services.AddTransient<IGetAllPostsHandler, GetAllPostsHandler>();
+builder.Services.AddTransient<IGetPostByIdHandler, GetPostByIdHandler>();
 builder.Services.AddOpenApi();
 
 
@@ -67,8 +67,12 @@ app.UseRouting();
 
 app.MapGet("/api/post/{id}", async (int id, [FromServices] IGetPostByIdHandler getPostHandler) =>
 {
-    await getPostHandler.Handle(id);
-    return Results.Ok(id);
+    var postById = new GetPostById()
+    {
+        PostId = id
+    };
+    var post = await getPostHandler.Handle(postById);
+    return Results.Ok(post);
 }).WithName("GetPostById");
 
 app.MapPost("/api/posts", async (Post post, ICreatePostHandler createPostHandler) =>
