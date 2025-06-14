@@ -41,13 +41,9 @@ namespace Tests.IntegrationTests
             var response = await _httpClient.GetAsync("/api/posts");
             var rawContent = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"Raw Response: {rawContent}");
-
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-            var posts = await response.Content.ReadFromJsonAsync<List<Post>>();
-            posts.Should().NotBeNull();
-            posts.Should().HaveCount(3);
+            
             // Assert
+            var posts = await response.Content.ReadFromJsonAsync<List<Post>>();
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             posts.Should().NotBeNull();
             posts.Should().HaveCount(3); // Assuming SeedTestDatabaseAsync adds 3 posts
@@ -67,10 +63,34 @@ namespace Tests.IntegrationTests
             }
 
             // Act
-            var response = await _httpClient.DeleteAsync("api/posts/1");
+            var response = await _httpClient.DeleteAsync("api/posts/3");
             
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        }
+        
+        [Fact]
+        public async Task Get_Post_ReturnsSuccessAndPosts()
+        {
+            // Arrange
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var scopedServices = scope.ServiceProvider;
+                var db = scopedServices.GetRequiredService<SocialDbcontext>();
+
+                db.Database.EnsureCreated();
+                await SeedTestDatabaseAsync(db); // Seed the database with test data
+            }
+
+            // Act
+            var response = await _httpClient.GetAsync("api/post/1");
+            var rawContent = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Raw Response: {rawContent}");
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            
+            var post = await response.Content.ReadFromJsonAsync<Post>();
+            post.Should().NotBeNull();
         }
         
         
