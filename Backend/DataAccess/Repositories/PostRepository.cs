@@ -25,12 +25,12 @@ namespace Infrastructure.Repositories
             return toCreate;
         }
 
-        public void DeletePost(int postId)
+        public async void DeletePost(int postId)
         {
-            var post = _socialDbcontext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
+            var post = await _socialDbcontext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
 
             if (post == null) return;
-
+            
             _socialDbcontext.Remove(post);
 
             _socialDbcontext.SaveChangesAsync();

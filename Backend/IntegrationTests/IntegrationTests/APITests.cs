@@ -1,21 +1,21 @@
 using System.Net;
 using System.Net.Http.Json;
-using FluentAssertions;
 using Domain.Entities;
+using FluentAssertions;
 using Infrastructure;
+using IntegrationTests;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 
-namespace IntegrationTests
+namespace Tests.IntegrationTests
 {
-    public class APITests : IClassFixture<CustomWebApplicationFactory<Program>>
+    public class ApiTests : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly CustomWebApplicationFactory<Program> _factory;
         private readonly HttpClient _httpClient;
 
-        public APITests(CustomWebApplicationFactory<Program> factory)
+        public ApiTests(CustomWebApplicationFactory<Program> factory)
         {
             _factory = factory;
             _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -38,8 +38,6 @@ namespace IntegrationTests
             }
 
             // Act
-            // var response = await _httpClient.GetAsync("/api/posts");
-            // var posts = await response.Content.ReadFromJsonAsync<List<Post>>();
             var response = await _httpClient.GetAsync("/api/posts");
             var rawContent = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"Raw Response: {rawContent}");
@@ -54,6 +52,28 @@ namespace IntegrationTests
             posts.Should().NotBeNull();
             posts.Should().HaveCount(3); // Assuming SeedTestDatabaseAsync adds 3 posts
         }
+        
+        [Fact]
+        public async Task Delete_Posts_ReturnsSuccessAndPosts()
+        {
+            // Arrange
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var scopedServices = scope.ServiceProvider;
+                var db = scopedServices.GetRequiredService<SocialDbcontext>();
+
+                db.Database.EnsureCreated();
+                await SeedTestDatabaseAsync(db); // Seed the database with test data
+            }
+
+            // Act
+            var response = await _httpClient.DeleteAsync("api/posts/1");
+            
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        }
+        
+        
 
         private async Task SeedTestDatabaseAsync(SocialDbcontext db)
         {

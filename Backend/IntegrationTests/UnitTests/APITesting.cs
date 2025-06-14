@@ -1,26 +1,26 @@
-﻿using Application.Abstractions;
+﻿using System.Net.Http.Json;
+using Application.Abstractions;
 using Domain.Entities;
 using FluentAssertions;
 using Infrastructure;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
+using IntegrationTests;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using System.Net.Http.Json;
 using Use_Cases.Posts.Queries;
 using Use_Cases.Posts.QueryHandlers;
-using Xunit; // Make sure Xunit namespace is imported
 
-namespace IntegrationTests
+// Make sure Xunit namespace is imported
+
+namespace Tests.UnitTests
 {
     // Implement IAsyncLifetime for per-test setup/teardown
-    public class APITesting : IClassFixture<CustomWebApplicationFactory<Program>>, IAsyncLifetime
+    public class ApiTesting : IClassFixture<CustomWebApplicationFactory<Program>>, IAsyncLifetime
     {
         private readonly CustomWebApplicationFactory<Program> _factory; // Use the custom factory
         private HttpClient _httpClient;
         private IServiceScope _scope; // Keep scope for cleanup if needed
 
-        public APITesting(CustomWebApplicationFactory<Program> factory) // Inject the custom factory
+        public ApiTesting(CustomWebApplicationFactory<Program> factory) // Inject the custom factory
         {
             _factory = factory;
             // Client can be created here or in InitializeAsync if preferred
@@ -146,6 +146,31 @@ namespace IntegrationTests
 
             // Assert
             result.Should().BeEquivalentTo(expectedPosts); // Use BeEquivalentTo for collection comparison
+        }
+        
+        [Fact]
+        public async Task Handle_ReturnsGetPostByIdHandler()
+        {
+            // Arrange
+            var mockPostRepository = new Mock<IPostRepository>();
+
+            var expectedPost = new Post
+            {
+                Id = 1, Comments = "Post 1", Content = "Content 1"
+            };
+            
+            mockPostRepository.Setup(repo => repo.GetPostById(1)).ReturnsAsync(expectedPost);
+            var handler = new GetPostByIdHandler(mockPostRepository.Object);
+            var request = new GetPostById()
+            {
+                PostId = 1
+            };
+
+            // Act
+            var result = await handler.Handle(request); // Pass CancellationToken
+
+            // Assert
+            result.Should().BeEquivalentTo(expectedPost); // Use BeEquivalentTo for collection comparison
         }
     }
 }

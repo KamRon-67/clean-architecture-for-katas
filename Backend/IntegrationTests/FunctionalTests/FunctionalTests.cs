@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc.Testing;
+using IntegrationTests;
 
-namespace IntegrationTests;
+namespace Tests.FunctionalTests;
 
 public class FunctionalTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
