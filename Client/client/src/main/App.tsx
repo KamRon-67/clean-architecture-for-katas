@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import PostList from '../Post/PostList'
+import Header from './Header'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
       <div className='container'>
-        <Header subtitle="Providing houses all over the world" />
+        <Header subtitle="This is where your header data goes" />
+        <PostList />
       </div>
   )
 }

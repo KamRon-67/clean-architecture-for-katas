@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text;
 using Domain.Entities;
 using FluentAssertions;
 using Infrastructure;
@@ -7,6 +8,7 @@ using IntegrationTests;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace Tests.IntegrationTests
 {
@@ -70,7 +72,7 @@ namespace Tests.IntegrationTests
         }
         
         [Fact]
-        public async Task Get_Post_ReturnsSuccessAndPosts()
+        public async Task Get_Post_By_Id_ReturnsSuccessAndPosts()
         {
             // Arrange
             using (var scope = _factory.Services.CreateScope())
@@ -92,9 +94,39 @@ namespace Tests.IntegrationTests
             var post = await response.Content.ReadFromJsonAsync<Post>();
             post.Should().NotBeNull();
         }
-        
-        
+ 
+        [Fact]
+        public async Task Post_Saves_Success()
+        {
+            // Arrange
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var scopedServices = scope.ServiceProvider;
+                var db = scopedServices.GetRequiredService<SocialDbcontext>();
 
+                db.Database.EnsureDeleted(); // Optional but recommended to start clean
+                db.Database.EnsureCreated();
+
+                await SeedTestDatabaseAsync(db);
+            }
+            
+            var postPayload = new Post()
+            {
+                Content = "Test post content",
+                Id = 3,
+                Comments = "data",
+                DateCreated = DateTime.Now
+            };
+
+            var content = new StringContent(JsonConvert.SerializeObject(postPayload), Encoding.UTF8, "application/json");
+
+            // Act
+            var response = await _httpClient.PostAsync("api/posts", content);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Created); // or HttpStatusCode.Created if you return 201
+        }
+        
         private async Task SeedTestDatabaseAsync(SocialDbcontext db)
         {
             if (!await db.Posts.AnyAsync())

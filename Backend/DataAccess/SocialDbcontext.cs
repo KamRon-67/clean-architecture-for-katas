@@ -8,5 +8,10 @@ namespace Infrastructure
         public SocialDbcontext(DbContextOptions options) : base(options) { }
 
         public DbSet<Post> Posts { get; set; }
+        
+        // protected override void OnModelCreating(ModelBuilder modelBuilder)
+        // {
+        //     SeedData.Seed(modelBuilder);
+        // }
     }
 }

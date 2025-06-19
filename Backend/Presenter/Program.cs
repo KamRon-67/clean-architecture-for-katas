@@ -10,12 +10,11 @@ using Use_Cases.Posts.Commands;
 using Use_Cases.Posts.Queries;
 using Use_Cases.Posts.QueryHandlers;
 using Scalar.AspNetCore;
-using Microsoft.AspNetCore.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
-
+builder.Services.AddCors();
 builder.Services.AddDbContext<SocialDbcontext>(options =>
     options.UseSqlite(conn));
 builder.Services.AddScoped<IPostRepository, PostRepository>();
@@ -26,12 +25,13 @@ builder.Services.AddTransient<IGetAllPostsHandler, GetAllPostsHandler>();
 builder.Services.AddTransient<IGetPostByIdHandler, GetPostByIdHandler>();
 builder.Services.AddOpenApi();
 
-
 var app = builder.Build();
+
+app.UseCors(x => x.WithOrigins("http://localhost:4000")
+    .AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
 app.MapOpenApi();
 app.MapScalarApiReference();
-
 
 // --- START DIAGNOSTIC LOGGING ---
 app.Use(async (context, next) =>
@@ -56,7 +56,7 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseRouting();
 

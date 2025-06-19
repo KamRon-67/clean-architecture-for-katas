@@ -18,3 +18,5 @@ const Header = ({subtitle}: Args) => {
         </header>
     )
 }
+
+export default Header;
