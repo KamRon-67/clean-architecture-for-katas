@@ -9,4 +9,6 @@ namespace Domain.Entities
         public DateTime DateCreated { get; set; }
         public DateTime LastModified { get; set; }
     }
+    
+    public record PostDto(int Id, string Comments, string Content);
 }

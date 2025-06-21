@@ -4,13 +4,7 @@ import config from "../config";
 
 const PostList = () => {
     const [posts, setPosts ] = useState<Post[]>([]);
-    
 
-    // const fetchPosts = async () => {
-    //     const rsp = await fetch(`${config.BaseApiUrl}/api/posts`); 
-    //     const posts = await rsp.json();
-    //     setPosts(posts);
-    // }
 
 
 /// Problem: fetchPosts() is inside the component → runs on every render → triggers setPosts() → re-renders → loop.

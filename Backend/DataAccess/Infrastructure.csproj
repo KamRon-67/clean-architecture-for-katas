@@ -20,4 +20,8 @@
     <ProjectReference Include="..\UseCase\Use_Cases.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\" />
+  </ItemGroup>
+
 </Project>

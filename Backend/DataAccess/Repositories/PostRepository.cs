@@ -36,10 +36,15 @@ namespace Infrastructure.Repositories
             _socialDbcontext.SaveChangesAsync();
         }
 
-        public async Task<Post?> GetPostById(int postId)
+        public async Task<PostDto?> GetPostById(int postId)
         {
-            var post = await _socialDbcontext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
+            //var post = await _socialDbcontext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
 
+            var post = await _socialDbcontext.Posts
+                .Where(x => x.Id == postId)
+                .Select(x => new PostDto(x.Id, x.Comments, x.Content))
+                .FirstOrDefaultAsync();
+            
             if (post == null)
             {
                 // Log a message or throw an exception if necessary

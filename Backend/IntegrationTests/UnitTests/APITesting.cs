@@ -154,10 +154,7 @@ namespace Tests.UnitTests
             // Arrange
             var mockPostRepository = new Mock<IPostRepository>();
 
-            var expectedPost = new Post
-            {
-                Id = 1, Comments = "Post 1", Content = "Content 1"
-            };
+            var expectedPost = new PostDto(1, "Post 1", "Content 1");
             
             mockPostRepository.Setup(repo => repo.GetPostById(1)).ReturnsAsync(expectedPost);
             var handler = new GetPostByIdHandler(mockPostRepository.Object);

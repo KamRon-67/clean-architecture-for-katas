@@ -5,5 +5,5 @@ namespace Use_Cases.Posts.QueryHandlers;
 
 public interface IGetPostByIdHandler
 {
-    Task<Post?> Handle(GetPostById request);
+    Task<PostDto?> Handle(GetPostById request);
 }
