@@ -13,7 +13,7 @@ namespace Use_Cases.Posts.QueryHandlers
             _postRepository = postRepository;
         }
 
-        public async Task<ICollection<Post>> Handle(GetAllPosts request)
+        public async Task<ICollection<PostDto>> Handle(GetAllPosts request)
         {
             return await _postRepository.GetPosts();
         }

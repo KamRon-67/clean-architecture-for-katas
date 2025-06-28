@@ -14,15 +14,21 @@ namespace Infrastructure.Repositories
             _socialDbcontext = socialDbcontext;
         }
 
-        public async Task<Post> CreatePost(Post toCreate)
+        public async Task<PostDto> CreatePost(Post toCreate)
         {
-            toCreate.DateCreated = DateTime.UtcNow;
-            toCreate.LastModified = DateTime.UtcNow;
-
-            await _socialDbcontext.AddAsync(toCreate);  // ✅ Use async version
+            var post = new Post()
+            {
+                Id = toCreate.Id,
+                Comments = toCreate.Comments,
+                Content = toCreate.Content,
+                DateCreated = DateTime.Now,
+                LastModified = DateTime.Now
+            };
+            
+            await _socialDbcontext.AddAsync(post);  // ✅ Use async version
             await _socialDbcontext.SaveChangesAsync();  // ✅ Await SaveChangesAsync
 
-            return toCreate;
+            return new PostDto(Id: post.Id, Comments: post.Comments, Content: post.Content);
         }
 
         public async void DeletePost(int postId)
@@ -54,12 +60,14 @@ namespace Infrastructure.Repositories
             return post;
         }
 
-        public async Task<ICollection<Post>> GetPosts()
+        public async Task<ICollection<PostDto>> GetPosts()
         {
-            return await _socialDbcontext.Posts.ToListAsync();
+            return await _socialDbcontext.Posts
+                .Select(x => new PostDto(x.Id, x.Comments, x.Content))
+                .ToListAsync();
         }
 
-        public async Task<Post?> UpdatePost(string updatedContent, int postId)
+        public async Task<PostDto?> UpdatePost(string updatedContent, int postId)
         {
             var post = await _socialDbcontext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
 
@@ -73,7 +81,7 @@ namespace Infrastructure.Repositories
             post.Content = updatedContent;
 
             await _socialDbcontext.SaveChangesAsync();
-            return post;
+            return new PostDto(Id: post.Id, Comments: post.Comments, Content: post.Content);
         }
 
     }

@@ -4,10 +4,10 @@ namespace Application.Abstractions
 {
     public interface IPostRepository
     {
-        Task<ICollection<Post>> GetPosts();
+        Task<ICollection<PostDto>> GetPosts();
         Task<PostDto?> GetPostById(int postId);
-        Task<Post> CreatePost(Post toCreate);
-        Task<Post?> UpdatePost(string updatedContent, int postId);
+        Task<PostDto> CreatePost(Post toCreate);
+        Task<PostDto?> UpdatePost(string updatedContent, int postId);
         void DeletePost(int postId);
     }
 }
