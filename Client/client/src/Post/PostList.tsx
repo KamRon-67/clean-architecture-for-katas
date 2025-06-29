@@ -1,23 +1,9 @@
-import { useState, useEffect } from "react"
-import { Post } from "../Types/post";
-import config from "../config";
+import useFetchPosts from "../hooks/PostHooks";
 
 const PostList = () => {
-    const [posts, setPosts ] = useState<Post[]>([]);
+   // const [posts, setPosts ] = useState<Post[]>([]);
 
-
-
-/// Problem: fetchPosts() is inside the component → runs on every render → triggers setPosts() → re-renders → loop.
-/// Solution: Move it into useEffect so it only runs once on initial mount.
-    useEffect(() => {
-        const fetchPosts = async () => {
-            const rsp = await fetch(`${config.BaseApiUrl}/api/posts`);
-            const data = await rsp.json();
-            setPosts(data);
-        };
-
-        fetchPosts();
-    }, []); //
+    const { data } = useFetchPosts();
 
   return (
     <div>
@@ -29,13 +15,13 @@ const PostList = () => {
       <table className="table table-hover">
         <thead>
           <tr>
-            <th>Address</th>
-            <th>Country</th>
-            <th>Asking Price</th>
+            <th>Comments</th>
+            <th>Content</th>
+            <th>Date Created</th>
           </tr>
         </thead>
         <tbody>
-          {posts.map((p) => (
+          {data && data.map((p) => (
             <tr key={p.id}>
                 <td>{p.comments}</td>
                 <td>{p.content}</td>

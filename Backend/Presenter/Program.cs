@@ -93,7 +93,7 @@ app.MapGet("/api/posts", async ([FromServices] IGetAllPostsHandler getAllPostsHa
     }
 });
 
-app.MapPut("/api/posts/{id}", async (Post post, int id, IUpdatePostHandler updatePostHandler) =>
+app.MapPut("/api/posts/{id}", async (int id, Post post, IUpdatePostHandler updatePostHandler) =>
 {
     var updatePost = new UpdatePost { PostId = id, UpdatedContent = post.Content };
     var updatedPost = await updatePostHandler.Handle(updatePost);
