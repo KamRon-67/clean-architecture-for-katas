@@ -25,7 +25,7 @@ jobs:
         run: dotnet build ./Backend/MinimalApiCQRS.sln  --configuration Release --no-restore
 
       - name: Test
-        run: dotnet ./Backend/MinimalApiCQRS.sln --configuration Release --no-restore --no-build --verbosity normal
+        run: dotnet test ./Backend/MinimalApiCQRS.sln --configuration Release --no-restore --no-build --verbosity normal
 
       - name: Publish
         run: dotnet publish ./Backend/MinimalApiCQRS.sln  --configuration Release --no-build
