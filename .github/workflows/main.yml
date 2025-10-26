@@ -1,0 +1,28 @@
+name: Publish
+
+on: 
+  workflow_dispatch:
+  push:
+    branches:
+    - Master
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore ./MinimalApiCQRS.sln
+
+      - name: Build
+        run: dotnet build ./MinimalApiCQRS.sln --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish ./MinimalApiCQRS.sln --configuration Release --no-build
