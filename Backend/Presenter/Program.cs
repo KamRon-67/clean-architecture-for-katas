@@ -133,7 +133,7 @@ if (app is IEndpointRouteBuilder routeBuilder)
 // --- END DIAGNOSTIC: Log Endpoints ---
 
 
-await app.RunAsync();
+await app!.RunAsync();
 
 // We are using this for the Intergration Tests
 public partial class Program { }
