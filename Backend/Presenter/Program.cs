@@ -28,7 +28,8 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 
 app.UseCors(x => x.WithOrigins("http://localhost:4000")
-    .AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+    .AllowAnyHeader()
+    .AllowAnyMethod());
 
 app.MapOpenApi();
 app.MapScalarApiReference();
