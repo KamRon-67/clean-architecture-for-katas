@@ -6,115 +6,97 @@ using FluentAssertions;
 using Infrastructure;
 using IntegrationTests;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace Tests.IntegrationTests
 {
-    public class ApiTests : IClassFixture<CustomWebApplicationFactory<Program>>
+    public class ApiTests : IClassFixture<CustomWebApplicationFactory<Program>>, IDisposable
     {
         private readonly CustomWebApplicationFactory<Program> _factory;
         private readonly HttpClient _httpClient;
+        private readonly IServiceScope _scope;
+        private readonly SocialDbcontext _dbContext;
 
-        public ApiTests(CustomWebApplicationFactory<Program> factory)
+        public ApiTests()
         {
-            _factory = factory;
+            _factory = new CustomWebApplicationFactory<Program>();
             _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false
             });
+            
+            // Create a dedicated scope and db context for each test
+            _scope = _factory.Services.CreateScope();
+            _dbContext = _scope.ServiceProvider.GetRequiredService<SocialDbcontext>();
+            
+            // Ensure clean database for each test
+            _dbContext.Database.EnsureDeleted();
+            _dbContext.Database.EnsureCreated();
+            SeedTestDatabaseAsync(_dbContext).GetAwaiter().GetResult();
+        }
+
+        public void Dispose()
+        {
+            _dbContext?.Dispose();
+            _scope?.Dispose();
+            _httpClient?.Dispose();
         }
 
         [Fact]
         public async Task GetAllPosts_ReturnsSuccessAndPosts()
         {
-            // Arrange
-            using (var scope = _factory.Services.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
-                var db = scopedServices.GetRequiredService<SocialDbcontext>();
-
-                db.Database.EnsureCreated();
-                await SeedTestDatabaseAsync(db); // Seed the database with test data
-            }
-
             // Act
             var response = await _httpClient.GetAsync("/api/posts");
             var rawContent = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"Raw Response: {rawContent}");
             
             // Assert
-            var posts = await response.Content.ReadFromJsonAsync<List<Post>>();
             response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var posts = await response.Content.ReadFromJsonAsync<List<Post>>();
             posts.Should().NotBeNull();
-            posts.Should().HaveCount(3); // Assuming SeedTestDatabaseAsync adds 3 posts
+            posts.Should().HaveCount(3);
         }
         
         [Fact]
         public async Task Delete_Posts_ReturnsSuccessAndPosts()
         {
-            // Arrange
-            using (var scope = _factory.Services.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
-                var db = scopedServices.GetRequiredService<SocialDbcontext>();
-
-                db.Database.EnsureCreated();
-                await SeedTestDatabaseAsync(db); // Seed the database with test data
-            }
-
             // Act
             var response = await _httpClient.DeleteAsync("api/posts/3");
             
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+            
+            // Verify the post was actually deleted
+            var getResponse = await _httpClient.GetAsync("/api/posts");
+            var posts = await getResponse.Content.ReadFromJsonAsync<List<Post>>();
+            posts.Should().HaveCount(2);
         }
         
         [Fact]
         public async Task Get_Post_By_Id_ReturnsSuccessAndPosts()
         {
-            // Arrange
-            using (var scope = _factory.Services.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
-                var db = scopedServices.GetRequiredService<SocialDbcontext>();
-
-                db.Database.EnsureCreated();
-                await SeedTestDatabaseAsync(db); // Seed the database with test data
-            }
-
             // Act
             var response = await _httpClient.GetAsync("api/post/1");
             var rawContent = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"Raw Response: {rawContent}");
 
+            // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             
             var post = await response.Content.ReadFromJsonAsync<Post>();
             post.Should().NotBeNull();
+            post.Id.Should().Be(1);
         }
  
         [Fact]
         public async Task Post_Saves_Success()
         {
             // Arrange
-            using (var scope = _factory.Services.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
-                var db = scopedServices.GetRequiredService<SocialDbcontext>();
-
-                db.Database.EnsureDeleted(); // Optional but recommended to start clean
-                db.Database.EnsureCreated();
-
-                await SeedTestDatabaseAsync(db);
-            }
-            
             var postPayload = new Post()
             {
                 Content = "Test post content",
-                Id = 3,
-                Comments = "data",
+                Comments = "Test comments",
                 DateCreated = DateTime.Now
             };
 
@@ -124,20 +106,26 @@ namespace Tests.IntegrationTests
             var response = await _httpClient.PostAsync("api/posts", content);
 
             // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Created); // or HttpStatusCode.Created if you return 201
+            response.StatusCode.Should().Be(HttpStatusCode.Created);
+            
+            // Verify the post was actually created
+            var getResponse = await _httpClient.GetAsync("/api/posts");
+            var posts = await getResponse.Content.ReadFromJsonAsync<List<Post>>();
+            posts.Should().HaveCount(4); // 3 seeded + 1 new
         }
         
         private async Task SeedTestDatabaseAsync(SocialDbcontext db)
         {
-            if (!await db.Posts.AnyAsync())
-            {
-                await db.Posts.AddRangeAsync(
-                    new Post { Comments = "Post 1", Content = "Content 1" },
-                    new Post { Comments = "Post 2", Content = "Content 2" },
-                    new Post { Comments = "Post 3", Content = "Content 3" }
-                );
-                await db.SaveChangesAsync();
-            }
+            // Clear any existing data and seed fresh
+            db.Posts.RemoveRange(db.Posts);
+            await db.SaveChangesAsync();
+
+            await db.Posts.AddRangeAsync(
+                new Post { Id = 1, Comments = "Comment 1", Content = "Content 1", DateCreated = DateTime.Now },
+                new Post { Id = 2, Comments = "Comment 2", Content = "Content 2", DateCreated = DateTime.Now },
+                new Post { Id = 3, Comments = "Comment 3", Content = "Content 3", DateCreated = DateTime.Now }
+            );
+            await db.SaveChangesAsync();
         }
     }
 }
