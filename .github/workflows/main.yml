@@ -28,4 +28,4 @@ jobs:
         run: dotnet test ./Backend/MinimalApiCQRS.sln --configuration Release --no-restore --no-build --verbosity normal
 
       - name: Publish
-        run: dotnet publish -r linux-x64 --no-self-contained ./Backend/MinimalApiCQRS.sln  --configuration Release --no-build
+        run: dotnet publish -r linux-x64 --no-self-contained ./Backend/MinimalApiCQRS.sln  --configuration Release
