@@ -19,7 +19,7 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: Restore
-        run: dotnet restore ./Backend/MinimalApiCQRS.sln 
+        run: dotnet restore -r linux-x64 ./Backend/MinimalApiCQRS.sln 
 
       - name: Build
         run: dotnet build ./Backend/MinimalApiCQRS.sln  --configuration Release --no-restore
